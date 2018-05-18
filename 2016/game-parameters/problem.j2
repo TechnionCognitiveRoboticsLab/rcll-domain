@@ -1,0 +1,128 @@
+(define (problem rcll-production-{{problem_suffix}})
+	(:domain rcll-production{{domain_suffix}})
+    
+  (:objects
+{%- for r in robots %}
+    {{r}} - robot
+{%- endfor %}
+{%- for o in orders %}
+    {{ o.id }} - order
+{%- endfor %}
+    wp1 - workpiece
+    cg1 cg2 cg3 cb1 cb2 cb3 - cap-carrier
+    {{T}}-BS {{T}}-CS1 {{T}}-CS2 {{T}}-DS - mps
+{%- if not no_rs %}
+    {{T}}-RS1 {{T}}-RS2 - mps
+{%- endif %}
+    {{team_color}} - team-color
+  )
+   
+  (:init
+   (mps-type {{T}}-BS BS)
+   (mps-type {{T}}-CS1 CS)
+   (mps-type {{T}}-CS2 CS) 
+   (mps-type {{T}}-DS DS)
+{%- if not no_rs %}
+   (mps-type {{T}}-RS1 RS)
+   (mps-type {{T}}-RS2 RS)
+{%- endif %}
+   (location-free START INPUT)
+   (location-free {{T}}-BS INPUT)
+   (location-free {{T}}-BS OUTPUT)
+   (location-free {{T}}-CS1 INPUT)
+   (location-free {{T}}-CS1 OUTPUT)
+   (location-free {{T}}-CS2 INPUT)
+   (location-free {{T}}-CS2 OUTPUT)
+   (location-free {{T}}-DS INPUT)
+   (location-free {{T}}-DS OUTPUT)
+{%- if not no_rs %}
+   (location-free {{T}}-RS1 INPUT)
+   (location-free {{T}}-RS1 OUTPUT)
+   (location-free {{T}}-RS2 INPUT)
+   (location-free {{T}}-RS2 OUTPUT)
+{%- endif %}
+   (cs-can-perform {{T}}-CS1 CS_RETRIEVE)
+   (cs-can-perform {{T}}-CS2 CS_RETRIEVE)
+   (cs-free {{T}}-CS1)
+   (cs-free {{T}}-CS2)
+{% if not no_rs %}
+   ; Additional base number handling static predicates
+   (rs-sub THREE TWO ONE)
+   (rs-sub THREE ONE TWO)
+   (rs-sub THREE ZERO THREE)
+   (rs-sub TWO TWO ZERO)
+   (rs-sub TWO ONE ONE)
+   (rs-sub TWO ZERO TWO)
+   (rs-sub ONE ONE ZERO)
+   (rs-sub ONE ZERO ONE)
+   (rs-sub ZERO ZERO ZERO)
+   (rs-inc ZERO ONE)
+   (rs-inc ONE TWO)
+   (rs-inc TWO THREE)
+   (rs-filled-with {{T}}-RS1 ZERO)
+   (rs-filled-with {{T}}-RS2 ZERO)
+{% endif %}
+   (wp-base-color wp1 BASE_NONE)
+   (wp-cap-color wp1 CAP_NONE)
+   (wp-ring1-color wp1 RING_NONE)
+   (wp-ring2-color wp1 RING_NONE)
+   (wp-ring3-color wp1 RING_NONE)
+   (wp-unused wp1)
+{%- for r in robots %}
+   (robot-waiting {{r}})
+{%- endfor %}
+
+   (mps-state {{T}}-BS IDLE)
+   (mps-state {{T}}-CS1 IDLE)
+   (mps-state {{T}}-CS2 IDLE)
+   (mps-state {{T}}-DS IDLE)
+{%- if not no_rs %}
+   (mps-state {{T}}-RS1 IDLE)
+   (mps-state {{T}}-RS2 IDLE)
+{%- endif %}
+
+   (wp-cap-color cg1 CAP_GREY)
+   (wp-cap-color cg2 CAP_GREY)
+   (wp-cap-color cg3 CAP_GREY)
+   (wp-on-shelf cg1 {{T}}-CS1 LEFT)
+   (wp-on-shelf cg2 {{T}}-CS1 MIDDLE)
+   (wp-on-shelf cg3 {{T}}-CS1 RIGHT)
+
+   (wp-cap-color cb1 CAP_BLACK)
+   (wp-cap-color cb2 CAP_BLACK)
+   (wp-cap-color cb3 CAP_BLACK)
+   (wp-on-shelf cb1 {{T}}-CS2 LEFT)
+   (wp-on-shelf cb2 {{T}}-CS2 MIDDLE)
+   (wp-on-shelf cb3 {{T}}-CS2 RIGHT)
+
+{%- for o in orders %}
+   (order-complexity {{ o.id }} c{{ o.complexity }})
+   (order-base-color {{ o.id }} {{ o.base_color }})
+{%- for r in o.ring_colors %}
+   (order-ring{{loop.index}}-color {{o.id}} {{ r }})
+{%- endfor %}
+   (order-cap-color {{ o.id }} {{ o.cap_color}})
+   (order-gate {{ o.id }} GATE-{{ o.gate }})
+{%- endfor %}
+
+{%- if not no_rs -%}
+{%- for r in ring_machines %}
+    (rs-ring-spec {{ r.machine }} {{ r.color }} {{ r.num }})
+{%- endfor -%}
+{%- endif %}
+
+{% if path_costs %}
+{% for pc in path_costs %}
+{%-   if not no_rs or pc.from_node[2:4] != "RS" and pc.to_node[2:4] != "RS" %}
+   (= (path-length {{ pc.from_node }} {{ pc.from_side }} {{ pc.to_node }} {{ pc.to_side }}) {{ pc.cost }})
+{%- endif -%}
+{%- endfor -%}
+{%- endif -%}
+	)
+
+  (:goal (and
+{% for o in orders %}
+    (order-fulfilled {{ o.id }})
+{%- endfor %}
+  ))
+)

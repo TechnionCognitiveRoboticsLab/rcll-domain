@@ -1,0 +1,17 @@
+Revising deliver time (845-909) to (836-900), time shift: 9
+Order 1: C0 (BASE_SILVER||CAP_BLACK) from 00:00 to 15:00 (@00:00 ~900s) D3
+Order 2: C0 (BASE_BLACK||CAP_BLACK) from 03:56 to 06:42 (@00:09 ~166s) D3
+Order 3: C0 (BASE_BLACK||CAP_GREY) from 05:47 to 08:04 (@02:50 ~137s) D2
+Order 4: C0 (BASE_SILVER||CAP_BLACK) from 13:56 to 15:00 (@11:34 ~64s) D2
+Order 5: C1 (BASE_SILVER|RING_BLUE|CAP_BLACK) from 09:29 to 11:16 (@04:02 ~107s) D1
+Order 6: C2 (BASE_RED|RING_BLUE RING_GREEN|CAP_BLACK) from 11:29 to 14:15 (@02:15 ~166s) D1
+Order 7: C3 (BASE_SILVER|RING_YELLOW RING_GREEN RING_ORANGE|CAP_GREY) from 10:50 to 13:48 (@00:00 ~178s) D3
+Order 8: C0 (BASE_SILVER||CAP_GREY) from 15:00 to 20:00 (@15:00 ~300s) D3
+Ring color RING_BLUE requires 2 additional bases
+Ring color RING_YELLOW requires 1 additional bases
+Ring color RING_ORANGE requires 0 additional bases
+Ring color RING_GREEN requires 0 additional bases
+RS C-RS1 has colors (RING_YELLOW RING_BLUE)
+RS M-RS1 has colors (RING_YELLOW RING_BLUE)
+RS C-RS2 has colors (RING_GREEN RING_ORANGE)
+RS M-RS2 has colors (RING_GREEN RING_ORANGE)
