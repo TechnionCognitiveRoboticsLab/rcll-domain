@@ -1,0 +1,9 @@
+{%- for o in orders %}
+Order {{ o.id }}: C{{ o.complexity }} ({{ o.base_color }}|{{ o.ring_colors|join('|')}}|{{o.cap_color}}) from {{o.delivery_period[0]|timestr}} to {{o.delivery_period[1]|timestr}} (@{{o.activate_at|timestr}} ~{{o.duration}}s) D{{ o.gate }}
+{%- endfor %}
+{%- for r in ring_specs %}
+Ring color {{r.color}} requires {{r.req_bases}} additional bases
+{%- endfor %}
+{%- for rs in ring_stations %}
+RS {{rs.name}} has colors ({{rs.ring_colors|join(' ')}})
+{%- endfor %}
