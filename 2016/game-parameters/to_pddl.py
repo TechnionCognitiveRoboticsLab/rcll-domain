@@ -69,7 +69,7 @@ if __name__ == '__main__':
 	with open(args.g) as f:
 		lines = f.read().splitlines()
 
-	re_order = re.compile('^Order (?P<order>[0-9]): C(?P<complexity>[0-3]) \((?P<base>[^\|]+)\|(?P<rings>[^\|]*)\|(?P<cap>[^\)]+)\) from (?P<delivery_open_m>[0-9]+):(?P<delivery_open_s>[0-9][0-9]) to (?P<delivery_close_m>[0-9]+):(?P<delivery_close_s>[0-9][0-9]).* D(?P<gate>[1-3])$')
+	re_order = re.compile('^Order (?P<order>[0-9]): C(?P<complexity>[0-3]) \((?P<base>[^\|]+)\|(?P<rings>[^\|]*)\|(?P<cap>[^\)]+)\) from (?P<delivery_open_m>[0-9]+):(?P<delivery_open_s>[0-9][0-9]) to (?P<delivery_close_m>[0-9]+):(?P<delivery_close_s>[0-9][0-9]) \(@(?P<announce_m>[0-9]+):(?P<announce_s>[0-9][0-9]) ~[0-9]+s\) D(?P<gate>[1-3])$')
 
 	re_ringmat = re.compile('^Ring color (?P<ring_color>[^ ]+) requires (?P<num_material>[0-2]).*$')
 
@@ -93,8 +93,9 @@ if __name__ == '__main__':
 			          'cap_color': m['cap'],
 			          'gate': m['gate'],
 					  'delivery_open': int(m['delivery_open_m'])*60+int(m['delivery_open_s']),
-					  'delivery_close': int(m['delivery_close_m'])*60+int(m['delivery_close_s'])
-					   }
+					  'delivery_close': int(m['delivery_close_m'])*60+int(m['delivery_close_s']),
+					  'announce': int(m['announce_m'])*60+int(m['announce_s']),
+					   }			
 			if m['rings'] != "":
 				order['ring_colors'] = m['rings'].split()
 			if args.orders is None or m['order'] in args.orders:
