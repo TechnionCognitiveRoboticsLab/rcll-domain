@@ -98,6 +98,8 @@
 {%- for o in orders %}
    (order-complexity {{ o.id }} c{{ o.complexity }})
    (order-base-color {{ o.id }} {{ o.base_color }})
+   (at {{o.delivery_open}} (order-delivery-window-open {{ o.id }}))
+   (at {{o.delivery_close}} (not (order-delivery-window-open {{ o.id }})))
 {%- for r in o.ring_colors %}
    (order-ring{{loop.index}}-color {{o.id}} {{ r }})
 {%- endfor %}
