@@ -124,7 +124,7 @@
 
   (:goal (and
 {% for o in orders %}
-    (order-fulfilled {{ o.id }})
+    (order-fulfilled {{ o.id }})  ; Announce {{ o.announce }}
 {%- endfor %}
   ))
 )
